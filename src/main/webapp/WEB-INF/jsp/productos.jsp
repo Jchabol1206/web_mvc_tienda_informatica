@@ -29,9 +29,9 @@
 				
 				<div style="position: absolute; left: 39%; top : 39%;">
 					
-<!-- 						<form action="/tienda_informatica/fabricantes/crear"> -->
-<!-- 							<input type="submit" value="Crear"> -->
-<!-- 						</form> -->
+						<form action="/tienda_informatica/productos/crear">
+							<input type="submit" value="Crear">
+						</form>
 					</div>
 				
 			</div>
