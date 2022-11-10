@@ -1,19 +1,25 @@
 package org.iesvegademijas.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Producto {
 	private int codigo;
 	private String nombre;
-	private double precio;
+	private BigDecimal precio;
 	private int codigoFabricante;
 	
+	public String getPrecioToString() {
+		String precioStr="";
+		precioStr=this.getPrecio().toString();
+		return precioStr;
+	}
+
 	
-	
-	public double getPrecio() {
+	public BigDecimal getPrecio() {
 		return precio;
 	}
-	public void setPrecio(double precio) {
+	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
 	}
 	public int getCodigo() {
@@ -31,8 +37,8 @@ public class Producto {
 	public int getCodigoFabricante() {
 		return codigoFabricante;
 	}
-	public void setCodigoFabricante(int codigoFabricante) {
-		this.codigoFabricante = codigoFabricante;
+	public void setCodigoFabricante(int codFab) {
+		this.codigoFabricante = codFab;
 	}
 	@Override
 	public String toString() {
@@ -53,8 +59,8 @@ public class Producto {
 			return false;
 		Producto other = (Producto) obj;
 		return codigo == other.codigo && codigoFabricante == other.codigoFabricante
-				&& Objects.equals(nombre, other.nombre)
-				&& Double.doubleToLongBits(precio) == Double.doubleToLongBits(other.precio);
+				&& Objects.equals(nombre, other.nombre) && Objects.equals(precio, other.precio);
 	}
+	
 	
 }

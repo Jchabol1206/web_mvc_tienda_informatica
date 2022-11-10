@@ -1,6 +1,7 @@
 package org.iesvegademijas.servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -84,7 +85,7 @@ public class ProductosServlet extends HttpServlet {
 				// GET
 				// /fabricantes/{id}
 				try {
-					request.setAttribute("prodcuto",prodDAO.find(Integer.parseInt(pathParts[1])));
+					request.setAttribute("producto",prodDAO.find(Integer.parseInt(pathParts[1])));
 					dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/detalle-producto.jsp");
 					        								
 				} catch (NumberFormatException nfe) {
@@ -131,8 +132,14 @@ public class ProductosServlet extends HttpServlet {
 			ProductoDAO prodDAO = new ProductoDAOimpl();
 			
 			String nombre = request.getParameter("nombre");
+			String codigo = request.getParameter("codigo");
+			String precio = request.getParameter("precio");
+			String codFab = request.getParameter("codigo_fabricante");
 			Producto nuevoProd = new Producto();
 			nuevoProd.setNombre(nombre);		//toDO Poner mas cosas para que pueda modificarse
+			nuevoProd.setCodigo(Integer.parseInt(codigo));
+			nuevoProd.setPrecio(BigDecimal.valueOf(Double.valueOf(precio)));
+			nuevoProd.setCodigoFabricante(Integer.parseInt(codFab));
 			prodDAO.create(nuevoProd);			
 			
 		} else if (__method__ != null && "put".equalsIgnoreCase(__method__)) {			
@@ -156,7 +163,52 @@ public class ProductosServlet extends HttpServlet {
 		
 		response.sendRedirect("/tienda_informatica/productos");
 		//response.sendRedirect("/tienda_informatica/fabricantes");
-		doGet(request, response);
 	}
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		ProductoDAO prodDAO = new ProductoDAOimpl();
+		String codigo = request.getParameter("codigo");
+		String nombre = request.getParameter("nombre");
+		String precio = request.getParameter("precio");
+		String codFab = request.getParameter("codigo_fabricante");
+		Producto prod = new Producto();
+		
+		try {
+			
+			int id = Integer.parseInt(codigo);
+			prod.setCodigo(id);
+			prod.setNombre(nombre);
+			prod.setPrecio(BigDecimal.valueOf(Double.valueOf(precio)));
+			prod.setCodigoFabricante(Integer.parseInt(codFab));
+			prodDAO.update(prod);
+			
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		RequestDispatcher dispatcher;
+		ProductoDAO ProdDAO = new ProductoDAOimpl();
+		String codigo = request.getParameter("codigo");
+		
+		try {
+			
+			int id = Integer.parseInt(codigo);
+		
+		ProdDAO.delete(id);
+			
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+		
+	}
+	
 
 }
