@@ -132,12 +132,10 @@ public class ProductosServlet extends HttpServlet {
 			ProductoDAO prodDAO = new ProductoDAOimpl();
 			
 			String nombre = request.getParameter("nombre");
-			String codigo = request.getParameter("codigo");
 			String precio = request.getParameter("precio");
 			String codFab = request.getParameter("codigo_fabricante");
 			Producto nuevoProd = new Producto();
 			nuevoProd.setNombre(nombre);		//toDO Poner mas cosas para que pueda modificarse
-			nuevoProd.setCodigo(Integer.parseInt(codigo));
 			nuevoProd.setPrecio(BigDecimal.valueOf(Double.valueOf(precio)));
 			nuevoProd.setCodigoFabricante(Integer.parseInt(codFab));
 			prodDAO.create(nuevoProd);			
