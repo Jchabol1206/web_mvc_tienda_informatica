@@ -2,6 +2,8 @@ package org.iesvegademijas.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.iesvegademijas.dao.FabricanteDAO;
 import org.iesvegademijas.dao.FabricanteDAOImpl;
 import org.iesvegademijas.model.Fabricante;
+import org.iesvegademijas.model.FabricanteDto;
 
 public class FabricantesServlet extends HttpServlet {
 
@@ -36,11 +39,20 @@ public class FabricantesServlet extends HttpServlet {
 		if (pathInfo == null || "/".equals(pathInfo)) {
 			FabricanteDAO fabDAO = new FabricanteDAOImpl();
 			
+//			List<FabricanteDto> res = fabDAO.getAll().stream().map(f->{
+//				FabricanteDto fab = new FabricanteDto();
+//				fab.setNombre(f.getNombre());
+//				fab.setCodigo(f.getCodigo());
+//				fab.setNumProds(fabDAO.getCountProductos(fab.getCodigo()));
+//				return fab;
+//			}).collect(Collectors.toList());
+//			
 			//GET 
 			//	/fabricantes/
 			//	/fabricantes
 			
-			request.setAttribute("listaFabricantes", fabDAO.getAll());		
+			
+			request.setAttribute("listaFabricantes", fabDAO.getAllDTOPlusCountProductos());		
 			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/fabricantes.jsp");
 			        		       
 		} else {

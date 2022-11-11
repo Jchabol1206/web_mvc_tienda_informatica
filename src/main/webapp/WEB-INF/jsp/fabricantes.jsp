@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="org.iesvegademijas.model.Fabricante"%>
+<%@page import="org.iesvegademijas.model.FabricanteDto"%>
 <%@page import="java.util.List"%>
 
 <!DOCTYPE html>
@@ -40,8 +40,9 @@
 			<hr/>
 		</div>
 		<div class="clearfix">
-			<div style="float: left;width: 33%">Código</div>
-			<div style="float: left;width: 33%">Nombre</div>
+			<div style="float: left;width: 25%">Código</div>
+			<div style="float: left;width: 25%">Nombre</div>
+			<div style="float: left;width: 25%">#Productos</div>
 			<div style="float: none;width: auto;overflow: hidden;">Acción</div>
 		</div>
 		<div class="clearfix">
@@ -49,14 +50,15 @@
 		</div>
 	<% 
         if (request.getAttribute("listaFabricantes") != null) {
-            List<Fabricante> listaFabricante = (List<Fabricante>)request.getAttribute("listaFabricantes");
+            List<FabricanteDto> listaFabricante = (List<FabricanteDto>)request.getAttribute("listaFabricantes");
             
-            for (Fabricante fabricante : listaFabricante) {
+            for (FabricanteDto fabricante : listaFabricante) {
     %>
 
 		<div style="margin-top: 6px;" class="clearfix">
-			<div style="float: left;width: 33%"><%= fabricante.getCodigo()%></div>
-			<div style="float: left;width: 33%"><%= fabricante.getNombre()%></div>
+			<div style="float: left;width: 25%"><%= fabricante.getCodigo()%></div>
+			<div style="float: left;width: 25%"><%= fabricante.getNombre()%></div>
+			<div style="float: left;width: 25%"><%= fabricante.getNumProds().get()%></div>
 			<div style="float: none;width: auto;overflow: hidden;">
 				<form action="/tienda_informatica/fabricantes/<%= fabricante.getCodigo()%>" style="display: inline;">
     				<input type="submit" value="Ver Detalle" />

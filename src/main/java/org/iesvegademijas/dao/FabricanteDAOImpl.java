@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.iesvegademijas.model.Fabricante;
+import org.iesvegademijas.model.FabricanteDto;
 
 public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO{
 
@@ -92,6 +93,46 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO{
         return listFab;
         
 	}
+	
+	public List<FabricanteDto> getAllDTOPlusCountProductos(){
+		
+		Connection conn = null;
+		Statement s = null;
+        ResultSet rs = null;
+        
+        List<FabricanteDto> listFabDto = new ArrayList<>(); 
+        
+        try {
+        	conn = connectDB();
+
+        	// Se utiliza un objeto Statement dado que no hay parámetros en la consulta.
+        	s = conn.createStatement();
+            		
+        	rs = s.executeQuery("select fabricante.codigo, fabricante.nombre, count(producto.codigo_fabricante) "
+        			+ "from fabricante left join producto on fabricante.codigo "
+        			+ "= producto.codigo_fabricante group by fabricante.codigo;");          
+            while (rs.next()) {
+            	FabricanteDto fabDto = new FabricanteDto();
+            	int idx = 1;
+            	fabDto.setCodigo(rs.getInt(idx++));
+            	fabDto.setNombre(rs.getString(idx++));
+            	fabDto.setNumProds(Optional.of(rs.getInt(idx)));
+            	listFabDto.add(fabDto);
+            }
+          
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+            closeDb(conn, s, rs);
+        }
+        return listFabDto;
+		
+		
+	}
+	
+	
 
 	/**
 	 * Devuelve Optional de fabricante con el ID dado.
@@ -196,6 +237,44 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO{
             closeDb(conn, ps, rs);
         }
 		
+	}
+
+	@Override
+	public Optional<Integer> getCountProductos(int id) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        Optional<Integer> Cont = null; 
+        
+        try {
+        	conn = connectDB();
+
+            		
+        	ps = conn.prepareStatement("SELECT COUNT(*) FROM producto WHERE codigo_fabricante = ?");
+        	
+        	int idx =  1;
+        	ps.setInt(idx, id);
+        	
+        	rs = ps.executeQuery();
+        	rs.next();
+        	
+      
+        	
+        	Cont = Optional.of(rs.getInt(1));
+        	
+        	
+        	
+        
+          
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+            closeDb(conn, ps, rs);
+        }
+        return Cont;
 	}
 
 }
