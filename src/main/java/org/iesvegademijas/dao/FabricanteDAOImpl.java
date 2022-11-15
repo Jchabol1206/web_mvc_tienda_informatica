@@ -109,7 +109,7 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO{
         	s = conn.createStatement();
             		
         	rs = s.executeQuery("select fabricante.codigo, fabricante.nombre, count(producto.codigo_fabricante) "
-        			+ "from fabricante left join producto on fabricante.codigo "
+        			+ "from fabricante left outer join producto on fabricante.codigo "
         			+ "= producto.codigo_fabricante group by fabricante.codigo;");          
             while (rs.next()) {
             	FabricanteDto fabDto = new FabricanteDto();
