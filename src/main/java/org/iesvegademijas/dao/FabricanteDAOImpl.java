@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.iesvegademijas.model.Fabricante;
 import org.iesvegademijas.model.FabricanteDto;
@@ -275,6 +277,45 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO{
             closeDb(conn, ps, rs);
         }
         return Cont;
+	}
+
+	@Override
+	public List<FabricanteDto> getAllSorted(String por, String mod) {
+		Connection conn = null;
+		Statement s = null;
+        ResultSet rs = null;
+        
+        List<FabricanteDto> listFabDto = new ArrayList<>(); 
+        
+        try {
+        	conn = connectDB();
+
+        	// Se utiliza un objeto Statement dado que no hay parámetros en la consulta.
+        	s = conn.createStatement();
+        	
+        	
+				rs = s.executeQuery("select fabricante.codigo, fabricante.nombre, count(producto.codigo_fabricante) "
+	        			+ "from fabricante left outer join producto on fabricante.codigo "
+	        			+ "= producto.codigo_fabricante group by fabricante.codigo ORDER BY"+por+mod+";");
+			
+        	 
+            while (rs.next()) {
+            	FabricanteDto fabDto = new FabricanteDto();
+            	int idx = 1;
+            	fabDto.setCodigo(rs.getInt(idx++));
+            	fabDto.setNombre(rs.getString(idx++));
+            	fabDto.setNumProds(Optional.of(rs.getInt(idx)));
+            	listFabDto.add(fabDto);
+            }
+          
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+            closeDb(conn, s, rs);
+        }
+        return listFabDto;
 	}
 
 }

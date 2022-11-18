@@ -26,9 +26,20 @@
 				<h1>Fabricantes</h1>
 			</div>
 			<div style="float: none;width: auto;overflow: hidden;min-height: 80px;position: relative;">
-				
+					<form action="/tienda_informatica/fabricantes/">
+						<select name="ordenar-por">
+							<option value="nombre">Ordenar por nombre</option>
+							<option value="cod">Ordenar por codigo</option>
+							</select>
+							<select name="modo-ordenar">
+							<option value="asc">Ordenar ascendente</option>
+							<option value="des">Ordenar descentente</option>
+							</select>
+							
+							<input type="submit" value="Ordenar">
+					</form>
 				<div style="position: absolute; left: 39%; top : 39%;">
-					
+						
 						<form action="/tienda_informatica/fabricantes/crear">
 							<input type="submit" value="Crear">
 						</form>

@@ -2,6 +2,7 @@ package org.iesvegademijas.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,14 @@ public class FabricantesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		RequestDispatcher dispatcher;
+		RequestDispatcher dispatcher=null;
 				
 		String pathInfo = request.getPathInfo(); //
 			
 		if (pathInfo == null || "/".equals(pathInfo)) {
 			FabricanteDAO fabDAO = new FabricanteDAOImpl();
+			String ord="";
+			String mod="";
 			
 //			List<FabricanteDto> res = fabDAO.getAll().stream().map(f->{
 //				FabricanteDto fab = new FabricanteDto();
@@ -51,8 +54,44 @@ public class FabricantesServlet extends HttpServlet {
 			//	/fabricantes/
 			//	/fabricantes
 			
-			
-			request.setAttribute("listaFabricantes", fabDAO.getAllDTOPlusCountProductos());		
+			ord=request.getParameter("ordenar-por");
+			mod=request.getParameter("modo-ordenar");
+//			List<FabricanteDto> res=fabDAO.getAllDTOPlusCountProductos();
+//			System.out.println(ord);
+//			System.out.println(mod);
+//			if(ord.equals("nombre") && mod.equals("asc")) {
+//				res=fabDAO.getAllDTOPlusCountProductos().stream().sorted(Comparator.comparing(FabricanteDto::getNombre)).collect(Collectors.toList());
+//			}
+//			else if(ord.equals("nombre") && mod.equals("des")) {
+//				res=fabDAO.getAllDTOPlusCountProductos().stream().sorted(Comparator.comparing(FabricanteDto::getNombre).reversed()).collect(Collectors.toList());
+//			}
+//			if(ord.equals("cod") && mod.equals("asc")) {
+//				res=fabDAO.getAllDTOPlusCountProductos().stream().sorted(Comparator.comparing(FabricanteDto::getCodigo)).collect(Collectors.toList());
+//			}
+//			else if(ord.equals("cod") && mod.equals("des")) {
+//				res=fabDAO.getAllDTOPlusCountProductos().stream().sorted(Comparator.comparing(FabricanteDto::getCodigo).reversed()).collect(Collectors.toList());
+//			}
+//			
+			if(ord==null || mod==null) {
+				ord=" fabricante.nombre ";
+				mod=" ASC ";
+			}
+			if(ord.equals("nombre")) {
+				ord=" fabricante.nombre ";
+			} else if(ord.equals("cod")) {
+				ord= " fabricante.codigo ";
+			}
+			if(mod.equals("asc")){
+				mod=" ASC ";
+			}
+			else if(mod.equals("des")) {
+				mod=" DESC ";
+			}
+			else {
+				ord=" fabricante.nombre ";
+				mod=" ASC ";
+			}
+			request.setAttribute("listaFabricantes", fabDAO.getAllSorted(ord, mod));		
 			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/fabricantes.jsp");
 			        		       
 		} else {
@@ -74,7 +113,8 @@ public class FabricantesServlet extends HttpServlet {
 				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/crear-fabricante.jsp");
         												
 			
-			} else if (pathParts.length == 2) {
+			}
+			else if (pathParts.length == 2) {
 				FabricanteDAO fabDAO = new FabricanteDAOImpl();
 				// GET
 				// /fabricantes/{id}

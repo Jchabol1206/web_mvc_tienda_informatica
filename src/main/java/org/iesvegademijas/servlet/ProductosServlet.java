@@ -2,6 +2,8 @@ package org.iesvegademijas.servlet;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,11 +56,26 @@ public class ProductosServlet extends HttpServlet {
 		if (pathInfo == null || "/".equals(pathInfo)) {
 			ProductoDAO prodDAO = new ProductoDAOimpl();
 			
+			//List<Producto> lista = prodDAO.getAll();
+			String comp= request.getParameter("filtrar-por-nombre");
+			
+			
+//			if(comp!=null) {
+//				lista=lista.stream().filter(p->p.getNombre().toLowerCase().contains(comp)).collect(Collectors.toList());	
+//			}
+//			
+				
+	
 			//GET 
 			//	/fabricantes/
 			//	/fabricantes
+			if(comp==null) {
+				request.setAttribute("listaProductos", prodDAO.getAll());
+			}
+			else {
+				request.setAttribute("listaProductos", prodDAO.getAllFiltFT(comp));	
+			}
 			
-			request.setAttribute("listaProductos", prodDAO.getAll());		
 			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos.jsp");
 			        		       
 		} else {

@@ -12,6 +12,7 @@ public interface FabricanteDAO {
 	
 	public List<Fabricante> getAll();
 	public List<FabricanteDto> getAllDTOPlusCountProductos();
+	public List<FabricanteDto> getAllSorted(String por, String mod);
 	public Optional<Fabricante>  find(int id);
 	
 	public void update(Fabricante fabricante);

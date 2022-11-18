@@ -12,6 +12,8 @@ public void create(Producto producto);
 	
 	public List<Producto> getAll();
 	public Optional<Producto>  find(int id);
+	public List<Producto> getAllFilt(String busq);
+	public List<Producto> getAllFiltFT(String busq);
 	
 	public void update(Producto producto);
 	

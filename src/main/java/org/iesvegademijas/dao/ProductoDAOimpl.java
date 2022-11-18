@@ -210,4 +210,78 @@ public class ProductoDAOimpl extends AbstractDAOImpl implements ProductoDAO{
 		
 	}
 
+	@Override
+	public List<Producto> getAllFilt(String busq) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        List<Producto> listProd = new ArrayList<>(); 
+        
+        try {
+        	conn = connectDB();
+
+        	// Se utiliza un objeto Statement dado que no hay parámetros en la consulta.
+        	ps = conn.prepareStatement("select * from producto where producto.nombre like '%' ? '%';");
+        	int idx =  1;
+        	ps.setString(idx, busq);
+            		
+        	rs = ps.executeQuery();          
+            while (rs.next()) {
+            	int idz=1;
+            	Producto prod = new Producto();
+            	prod.setCodigo(rs.getInt(idz++));
+            	prod.setNombre(rs.getString(idz++));
+            	prod.setPrecio(BigDecimal.valueOf(rs.getDouble(idz)));
+            	listProd.add(prod);
+            }
+          
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+            closeDb(conn, ps, rs);
+        }
+        return listProd;
+        
+	}
+
+	@Override
+	public List<Producto> getAllFiltFT(String busq) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        List<Producto> listProd = new ArrayList<>(); 
+        
+        try {
+        	conn = connectDB();
+
+        	// Se utiliza un objeto Statement dado que no hay parámetros en la consulta.
+        	ps = conn.prepareStatement("select * from producto where match(nombre) against( ?  in boolean mode);");
+        	int idx =  1;
+        	busq+="*";
+        	ps.setString(idx, busq);
+            		
+        	rs = ps.executeQuery();          
+            while (rs.next()) {
+            	int idz=1;
+            	Producto prod = new Producto();
+            	prod.setCodigo(rs.getInt(idz++));
+            	prod.setNombre(rs.getString(idz++));
+            	prod.setPrecio(BigDecimal.valueOf(rs.getDouble(idz)));
+            	listProd.add(prod);
+            }
+          
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+            closeDb(conn, ps, rs);
+        }
+        return listProd;
+	}
+
 }
