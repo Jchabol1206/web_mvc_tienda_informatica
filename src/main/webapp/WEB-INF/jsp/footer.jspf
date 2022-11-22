@@ -1,6 +1,5 @@
 <html>
 <head>
-<title>Home</title>
 <style>
 		.head1 {
 			font-size:40px;
@@ -56,11 +55,5 @@
 		}
 	</style>
 </head>
-<body>
-<%@include file="/WEB-INF/jsp/header.jspf"%>
-<%@ include file="/WEB-INF/jsp/nav.jspf"%>
-
-<h1>Bienvenido a tienda informática</h1>
-<%@include file="/WEB-INF/jsp/footer.jspf" %>
-</body>
+<footer>Footer Section</footer>
 </html>
