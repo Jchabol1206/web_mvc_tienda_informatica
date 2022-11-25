@@ -2,6 +2,7 @@ package org.iesvegademijas.servlet;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.iesvegademijas.dao.FabricanteDAO;
 import org.iesvegademijas.dao.FabricanteDAOImpl;
@@ -46,7 +48,7 @@ public class UsuariosServlet extends HttpServlet{
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		RequestDispatcher dispatcher;
+		RequestDispatcher dispatcher =null;
 		
 		String pathInfo = request.getPathInfo(); //
 			
@@ -85,8 +87,13 @@ public class UsuariosServlet extends HttpServlet{
 				// GET
 				// /fabricantes/{id}
 				try {
-					request.setAttribute("usuario",usuDAO.find(Integer.parseInt(pathParts[1])));
-					dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/detalle-usuario.jsp");
+					if (pathParts.length== 2 && "login".equals(pathParts[1])) {
+						dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+					}
+					else {
+						request.setAttribute("usuario",usuDAO.find(Integer.parseInt(pathParts[1])));
+						dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/detalle-usuario.jsp");	
+					}
 					        								
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -128,6 +135,8 @@ public class UsuariosServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher dispatcher;
 		String __method__ = request.getParameter("__method__");
+		HttpSession session=null;
+		boolean logout=false;
 		
 		if (__method__ == null) {
 			// Crear uno nuevo
@@ -142,7 +151,36 @@ public class UsuariosServlet extends HttpServlet{
 			nuevoUsu.setRol(rol);
 			usuDAO.create(nuevoUsu);			
 			
-		} else if (__method__ != null && "put".equalsIgnoreCase(__method__)) {			
+		} else if(__method__ != null && "log".equalsIgnoreCase(__method__)) {
+			UsuarioDAO usuDAO = new UsuarioDAOImpl();
+			
+			String nombre = request.getParameter("nombre");
+			String contrasena = request.getParameter("contrasena");
+			Usuario usu = new Usuario();
+			usu.setNombre(nombre);
+			usu.setContrasena(contrasena);
+			boolean sesion = usuDAO.login(usu);
+			
+			if(sesion) {
+				session=request.getSession(true);
+				List<Usuario> usuList = usuDAO.getAll();
+				for(Usuario usuario:usuList) {
+					if(usuario.getNombre().equals(usu.getNombre())) {
+						usu.setRol(usuario.getRol());
+						}
+					}	
+				session.setAttribute("usuario-logado", usu);
+				System.out.println(session.getAttribute("usuario-logado"));
+			}
+			
+		}	else if(__method__!=null && "logout".equalsIgnoreCase(__method__)){
+			HttpSession session2=request.getSession();
+			session2.invalidate();
+			logout=true;
+			
+			
+		}
+			else if (__method__ != null && "put".equalsIgnoreCase(__method__)) {			
 			// Actualizar uno existente
 			//Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización PUT.
 			doPut(request, response);
@@ -161,7 +199,13 @@ public class UsuariosServlet extends HttpServlet{
 			
 		}
 		
-		response.sendRedirect("/tienda_informatica/usuarios");
+		if(session!=null || logout==true) {
+			response.sendRedirect("/tienda_informatica/index.jsp");
+			
+		}else {
+			response.sendRedirect("/tienda_informatica/usuarios");
+		}
+		
 		//response.sendRedirect("/tienda_informatica/fabricantes");
 	}
 	@Override

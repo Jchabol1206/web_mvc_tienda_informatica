@@ -122,7 +122,12 @@
 				<label>Rol</label>
 			</div>
 				<div style="float: none;width: auto;overflow: hidden;">
-				<input name="rol" value="<%= optUsu.get().getRol() %>"/>
+			<select name="rol">
+				
+            	<option value="cliente">Cliente</option>
+            	<option value="administrador">Administrador</option>
+            	<option value="vendedor">Vendedor</option>
+   		 </select>
 			</div> 
 		</div>
 		

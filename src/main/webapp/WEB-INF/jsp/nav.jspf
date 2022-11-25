@@ -1,3 +1,4 @@
+<%@page import="org.iesvegademijas.model.Usuario"%>
 <html>
 <head>
 <style>
@@ -61,7 +62,21 @@
 		<a href="/tienda_informatica/productos">Productos</a>
 			<a href="/tienda_informatica/usuarios">Usuarios</a>
 		<div class="menu-log">
-			<a href="#login">LOGIN</a>
+			<%
+			Usuario usu = (Usuario)request.getSession().getAttribute("usuario-logado");
+			if(usu==null){
+				
+				%>
+				<a href="/tienda_informatica/usuarios/login" value="login">LOGIN</a>
+	
+			<%} else{
+			%>	
+			<form action="/tienda_informatica/usuarios" method="post">
+			<input type="hidden" name="__method__" value="logout" />
+					<input type="submit" value="LogOut"/>
+					</form>	
+			
+			<%}%>
 		</div>
 	</nav>
 </html>

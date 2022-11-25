@@ -15,5 +15,7 @@ public void create(Usuario usuario);
 	
 	public void delete(int id);
 	
+	public boolean login(Usuario usuario);
+	
 
 }
