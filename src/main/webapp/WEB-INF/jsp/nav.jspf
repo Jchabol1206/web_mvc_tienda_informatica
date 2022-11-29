@@ -35,6 +35,14 @@
 			text-decoration: none;
 			font-size: 20px;
 		}
+		.menu input{
+			float: left;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			font-size: 20px;
+		}
 		.menu-log {
 			right: auto;
 			float: right;
@@ -60,7 +68,19 @@
 		<a href="/tienda_informatica/index.jsp">HOME</a>
 		<a href="/tienda_informatica/fabricantes">Fabricantes</a>
 		<a href="/tienda_informatica/productos">Productos</a>
-			<a href="/tienda_informatica/usuarios">Usuarios</a>
+		<% 
+
+		
+		//Obteniendo la url
+		
+		Usuario usuario1 = (Usuario)request.getSession().getAttribute("usuario-logado");;
+			if(usuario1 != null //Seteo inline de usuario
+					&& "administrador".equals(usuario1.getRol())){
+				%>
+				<a href="/tienda_informatica/usuarios">Usuarios</a>
+			<% }
+			
+			%>
 		<div class="menu-log">
 			<%
 			Usuario usu = (Usuario)request.getSession().getAttribute("usuario-logado");
@@ -73,7 +93,7 @@
 			%>	
 			<form action="/tienda_informatica/usuarios" method="post">
 			<input type="hidden" name="__method__" value="logout" />
-					<input type="submit" value="LogOut"/>
+					<input  class="menu-log" type="submit" value="LogOut"/>
 					</form>	
 			
 			<%}%>

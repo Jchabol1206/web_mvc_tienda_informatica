@@ -95,9 +95,15 @@
 					</form>
 				<div style="position: absolute; left: 39%; top : 39%;">
 						
-						<form action="/tienda_informatica/fabricantes/crear">
+						<%
+					Usuario usuario2 = (Usuario)request.getSession().getAttribute("usuario-logado");
+					if(usuario2 != null //Seteo inline de usuario
+							&& "administrador".equals(usuario1.getRol())){
+						%>
+						<form action="/tienda_informatica/productos/crear">
 							<input type="submit" value="Crear">
 						</form>
+					<%}%>
 					</div>
 				
 			</div>
@@ -129,14 +135,21 @@
 				<form action="/tienda_informatica/fabricantes/<%= fabricante.getCodigo()%>" style="display: inline;">
     				<input type="submit" value="Ver Detalle" />
 				</form>
-				<form action="/tienda_informatica/fabricantes/editar/<%= fabricante.getCodigo()%>" style="display: inline;">
+				<% 
+			if(usuario2 != null //Seteo inline de usuario
+					&& "administrador".equals(usuario1.getRol())){
+				%>
+				<form action="/tienda_informatica/productos/editar/<%= fabricante.getCodigo()%>" style="display: inline;">
     				<input type="submit" value="Editar" />
 				</form>
-				<form action="/tienda_informatica/fabricantes/borrar/" method="post" style="display: inline;">
+				<form action="/tienda_informatica/productos/borrar/" method="post" style="display: inline;">
 					<input type="hidden" name="__method__" value="delete"/>
 					<input type="hidden" name="codigo" value="<%= fabricante.getCodigo()%>"/>
     				<input type="submit" value="Eliminar" />
 				</form>
+			<% }
+			
+			%>
 			</div>
 		</div>
 

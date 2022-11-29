@@ -86,10 +86,17 @@
 							<input type="submit" value="Buscar">
 					</form>
 				<div style="position: absolute; left: 39%; top : 39%;">
-					
+				
+					<%
+					Usuario usuario2 = (Usuario)request.getSession().getAttribute("usuario-logado");
+					if(usuario2 != null //Seteo inline de usuario
+							&& "administrador".equals(usuario1.getRol())){
+						%>
 						<form action="/tienda_informatica/productos/crear">
 							<input type="submit" value="Crear">
 						</form>
+					<%}%>
+						
 					</div>
 				
 			</div>
@@ -121,6 +128,11 @@
 				<form action="/tienda_informatica/productos/<%= producto.getCodigo()%>" style="display: inline;">
     				<input type="submit" value="Ver Detalle" />
 				</form>
+				<% 
+				
+			if(usuario2 != null //Seteo inline de usuario
+					&& "administrador".equals(usuario1.getRol())){
+				%>
 				<form action="/tienda_informatica/productos/editar/<%= producto.getCodigo()%>" style="display: inline;">
     				<input type="submit" value="Editar" />
 				</form>
@@ -129,6 +141,10 @@
 					<input type="hidden" name="codigo" value="<%= producto.getCodigo()%>"/>
     				<input type="submit" value="Eliminar" />
 				</form>
+			<% }
+			
+			%>
+				
 			</div>
 		</div>
 

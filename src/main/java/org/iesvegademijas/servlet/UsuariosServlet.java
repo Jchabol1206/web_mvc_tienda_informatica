@@ -137,6 +137,7 @@ public class UsuariosServlet extends HttpServlet{
 		String __method__ = request.getParameter("__method__");
 		HttpSession session=null;
 		boolean logout=false;
+		boolean ses=false;
 		
 		if (__method__ == null) {
 			// Crear uno nuevo
@@ -168,9 +169,12 @@ public class UsuariosServlet extends HttpServlet{
 					if(usuario.getNombre().equals(usu.getNombre())) {
 						usu.setRol(usuario.getRol());
 						}
-					}	
+					}
+				System.out.println(usu.getRol());
 				session.setAttribute("usuario-logado", usu);
-				System.out.println(session.getAttribute("usuario-logado"));
+			}
+			else {
+				ses=true;
 			}
 			
 		}	else if(__method__!=null && "logout".equalsIgnoreCase(__method__)){
@@ -199,7 +203,7 @@ public class UsuariosServlet extends HttpServlet{
 			
 		}
 		
-		if(session!=null || logout==true) {
+		if(session!=null || logout==true || ses==true) {
 			response.sendRedirect("/tienda_informatica/index.jsp");
 			
 		}else {
